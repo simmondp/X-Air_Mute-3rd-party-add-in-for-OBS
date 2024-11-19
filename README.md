@@ -4,28 +4,24 @@ Python script for OBS to issue unmute commands to an X-Air 18 when a scene is se
 @author      Paul Simmonds
 @license    GPLv3 - Copyright
 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details. <http://www.gnu.org/licenses/>.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. <http://www.gnu.org/licenses/>.
 
-# This script should be located (on a windows machine) in the OBS Scripts directory
-# Typically this will be located here:
-# C:\Program Files\obs-studio\data\obs-plugins\frontend-tools\scripts
-#
-# OBS must be configured for the Python install location [Tools][Scripts][Python Settings]
-# Use [Browse] and locate: %USERPROFILE%\AppData\Local\Programs\Python\Python36
+This script should be located (on a windows machine) in the OBS Scripts directory
+Typically this will be located here:
+C:\Program Files\obs-studio\data\obs-plugins\frontend-tools\scripts
+
+OBS must be configured for the Python install location [Tools][Scripts][Python Settings]
+Use [Browse] and locate: %USERPROFILE%\AppData\Local\Programs\Python\Python36
 
 # X-Air 18 MIDI for CH Mutes
-#	Channel = 2
-#	CC (control change)
-#	CC Number = 0-15 (Ch1 = 0 etc.)
-#	Value = 0 (Mute OFF)  or 127 (Mute ON) 
+	Channel = 2
+	CC (control change)
+	CC Number = 0-15 (Ch1 = 0 etc.)
+	Value = 0 (Mute OFF)  or 127 (Mute ON) 
 
 Once installed, simply add the comma sepeted chanels inside [ ] to the scene name
 for example:
