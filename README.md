@@ -1,5 +1,5 @@
 # OBS_toX-Air_Mute
-Python script for OBS to issue unmute commands to an X-Air 18 when a scene is selected
+Python script for OBS to issue mute/unmute commands to an X-Air 18 when a scene is selected
 
 @author      Paul Simmonds
 @license    GPLv3 - Copyright
@@ -23,7 +23,7 @@ Use [Browse] and locate: %USERPROFILE%\AppData\Local\Programs\Python\Python36
 	CC Number = 0-15 (Ch1 = 0 etc.)
 	Value = 0 (Mute OFF)  or 127 (Mute ON) 
 
-Once installed, simply add the comma sepeted chanels inside [ ] to the scene name
+Once installed, simply add the comma seperated channels inside [ ] to the scene name
 for example:
 My new scene [1,3,5,15] 
 and when selected OBS will unmute chanels 1, 3, 5 and 15, and mute the rest.
