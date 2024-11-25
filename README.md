@@ -1,4 +1,4 @@
-# OBS_toX-Air_Mute
+# 3rd party Python add-in script for OBS to issue X-Air Mute commends
 Python script for OBS to issue mute/unmute commands to an X-Air 18 when a scene is selected
 
 @author      Paul Simmonds
