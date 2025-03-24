@@ -1,5 +1,5 @@
-#
-# Project     OBS Mute Script
+
+# Project     OBS Mute Script v2
 # @author      Paul Simmonds
 #
 # @license    GPLv3 - Copyright
@@ -34,42 +34,70 @@ import obspython as obs
 import sys
 import time
 import mido
+import ctypes
 
-# ------------------------------------------------------------
-portname = "MidiView 1"
+#=========================================================================
+#List the Midi port names and test for substring
+#substring must be in lower case
+substr = "x-air"
+portname="null"
+mports=[]
 debug = False  # default to "True" until overwritten by properties
 source_name = ""  # source name to monitor, stored from properties
-# ------------------------------------------------------------
 
+#=============================================================
 def dprint(*input):
 	if debug:
 		print(*input)
 
+#=============================================================
+#First interate all midi port names into a python list
+for port in mido.get_output_names():
+  mports.append(port)
+  if substr in port.lower():
+    portname=port
+
+#Now test if not null
+if portname=="null":
+  ctypes.windll.user32.MessageBoxW(0, u"X-Air Mixer not detected! Auto mute will not function", u"MIDI Error", 0)
+  dprint('-------------------------------------------')
+  dprint('Error: No X-Air Midi devices found')
+  dprint('is the sound system switched on?')
+  dprint('-- Only found the following MIDI devices --')
+  dprint('-------------------------------------------')
+  for port in mports:
+    dprint(port)
+  dprint('-------------------------------------------')
+else:
+  dprint('Found X-Air Device')
+  dprint(portname)
+
+#=============================================================
 def _handler_frontend_event(event):
-    dprint("Hello _handler_frontend_event")
-    global cur_scene
-    if event == obs.OBS_FRONTEND_EVENT_SCENE_CHANGED:
-        # Get the scene name of the current scene
-        scene = obs.obs_frontend_get_current_scene()
-        cur_scene = obs.obs_source_get_name(scene)
-        obs.obs_source_release(scene)
-        dprint("The scene selected is --> " + cur_scene)
-        _parse_scene_title(cur_scene)
+  dprint("Hello _handler_frontend_event")
+  global cur_scene
+  if event == obs.OBS_FRONTEND_EVENT_SCENE_CHANGED:
+    # Get the scene name of the current scene
+    scene = obs.obs_frontend_get_current_scene()
+    cur_scene = obs.obs_source_get_name(scene)
+    obs.obs_source_release(scene)
+    dprint("The scene selected is --> " + cur_scene)
+    _parse_scene_title(cur_scene)
 
-
+#=============================================================
 def _parse_scene_title(scene_title):
-	dprint("Hello _parse_scene_title")
-	if scene_title.find("[") >= 0:
-		parse_string = scene_title.split("[")
-		dprint("First string split = " + parse_string[1])
-		if parse_string[1].find("]") >= 0:
-			mic_string = parse_string[1].split("]")
-			dprint("Second string split = " + mic_string[0])
-			mic_array = mic_string[0].split(",")
-			dprint("String array = " + str(mic_array))
-			_set_mic_unmute(mic_array)
+  dprint("Hello _parse_scene_title")
+  if scene_title.find("[") >= 0:
+    parse_string = scene_title.split("[")
+    dprint("First string split = " + parse_string[1])
+    if parse_string[1].find("]") >= 0:
+      mic_string = parse_string[1].split("]")
+      dprint("Second string split = " + mic_string[0])
+      mic_array = mic_string[0].split(",")
+      dprint("String array = " + str(mic_array))
+      _set_mic_unmute(mic_array)
 
-
+#=============================================================
 # We now don't care about Channel assignments as its a 1:1 match on all 16 channels
 def _set_mic_unmute(mic_unmute_string_list):
 	import array as arr
@@ -80,16 +108,17 @@ def _set_mic_unmute(mic_unmute_string_list):
 		dprint("Connected to MIDI output")
 	except:
 		dprint("cannot connect to MIDI output")
-		exit()
+		#exit()
 	
 	# Now iterate the list
-	if not outport.closed:
-		dprint("Port is open - lets send some midi!")
-		for mic_number in mic_unmute_string_list:
-			dprint("Un-mute microphone " + mic_number)
-			mic = int(mic_number)
-			if mic < 17:
-				mute_array[int(mic_number)-1] = 0
+	try:
+		if not outport.closed:
+			dprint("Port is open - lets send some midi!")
+			for mic_number in mic_unmute_string_list:
+				dprint("Un-mute microphone " + mic_number)
+				mic = int(mic_number)
+				if mic < 17:
+					mute_array[int(mic_number)-1] = 0
 			
 		# Now send all 16 channels
 		for x in range(16):
@@ -99,44 +128,48 @@ def _set_mic_unmute(mic_unmute_string_list):
 		#close the MIDI Interface port
 		outport.close()
 		
-	if outport.closed:
-		dprint("Yes, the port is closed.")
-	
+		if outport.closed:
+			dprint("Yes, the port is closed.")	
+		
+	except:
+		dprint("No MIDI, List not iterated")
+		
 	
 #===================================================================================
 # OBS Script Functions
 
+#=============================================================
 def _initialize():
     obs.obs_frontend_add_event_callback(_handler_frontend_event)  # crash if unidentified script
     dprint("frontend_add_event_callback Initialized")
 
-
+#=============================================================
 def script_description():
     return "<b>OBS to X-Air 18 Mute Control</b>" + \
             "<hr>" + \
             "Set the microphone channel on the mixing desk as [1,2,3] in the scene name for those channels you want un-muted.</b><br/>" + \
-            "Paul Simmonds, ©2020-2024<br/>"
+            "Paul Simmonds, ©2020-2025<br/>"
 
-
+#=============================================================
 def script_update(settings):
     global debug
     debug = obs.obs_data_get_bool(settings, "debug")  # for printing debug messages
 
-
+#=============================================================
 def script_properties():
     props = obs.obs_properties_create()
     # Add testing buttons and debug toggle
     obs.obs_properties_add_bool(props, "debug", "Print Debug Messages")
     return props
 
-
+#=============================================================
 def script_load(settings):
     _initialize()
     dprint("OBS Script Loaded")
 
-
+#=============================================================
 def script_unload():
     obs.obs_frontend_remove_event_callback(_handler_frontend_event)
     dprint("OBS Mute Indicator Script Unloaded. Goodbye!")
-	
-	
+
+#=======================END==================================
