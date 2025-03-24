@@ -54,11 +54,7 @@ and when selected OBS will unmute chanels 1, 3, 5 and 15, and mute the rest.
 	Set the location to match the install directory
 	In this case "%USERPROFILE%\AppData\Local\Programs\Python\Python312"
 
-09. Use the python script (midi_port_test.py) in a CMD window to display the MIDI ports
-    detected, and copy the X-Air 18 port name.
-    Configure/edit the script to use that port
-
-10. Copy the python script (midi_mute.py) into the OBS Scripts directory, typically here:
+09. Copy the python script (midi_mute.py) into the OBS Scripts directory, typically here:
 	"C:\Program Files\obs-studio\data\obs-plugins\frontend-tools\scripts"
 
-11. Restart OBS
+10. Restart OBS
