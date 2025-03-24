@@ -1,5 +1,6 @@
 #
-# Project     Midi Port Test Script
+# Project     Midi Port Test Script v2
+# Addition of Windows error message to assist debug
 # @author      Paul Simmonds
 #
 # @license    GPLv3 - Copyright
@@ -20,12 +21,17 @@
 import sys
 import time
 import mido
+import ctypes
 
 #=========================================================================
 #List the Midi port names
+mystr=""
 print('------ OUTPUT ------')
 for port in mido.get_output_names():
+  mystr+=port
+  mystr+="\r\n"
   print(port)
 print('-------------------------')
+ctypes.windll.user32.MessageBoxW(0, mystr, u"MIDI References Found", 0)
 	
 #End
