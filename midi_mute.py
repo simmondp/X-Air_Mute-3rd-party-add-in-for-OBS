@@ -39,7 +39,7 @@ import ctypes
 #=========================================================================
 #List the Midi port names and test for substring
 #substring must be in lower case
-substr = "x-air"
+substr = "xr"
 portname="null"
 mports=[]
 debug = False  # default to "True" until overwritten by properties
